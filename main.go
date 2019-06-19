@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"html/template"
 	"log"
 	"net/http"
 )
@@ -12,6 +13,17 @@ func main() {
 
 	//提供静态资源文件
 	http.Handle("/asset/", http.FileServer(http.Dir(".")))
+
+	//template处理
+	http.HandleFunc("/user/login.shtml", func(w http.ResponseWriter, r *http.Request) {
+		//解析
+		tpl, err := template.ParseFiles("view/user/login.html")
+		if nil != err {
+			log.Fatal(err)
+		}
+
+		tpl.ExecuteTemplate(w, "/user/login.shtml", nil)
+	})
 
 	//搭建web服务器
 	http.ListenAndServe(":8989", nil)
