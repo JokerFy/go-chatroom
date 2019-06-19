@@ -10,6 +10,9 @@ func main() {
 	//绑定请求和处理函数
 	http.HandleFunc("/user/login", userLogin)
 
+	//提供静态资源文件
+	http.Handle("/asset/", http.FileServer(http.Dir(".")))
+
 	//搭建web服务器
 	http.ListenAndServe(":8989", nil)
 }
