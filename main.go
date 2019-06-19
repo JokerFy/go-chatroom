@@ -15,18 +15,23 @@ func main() {
 	http.Handle("/asset/", http.FileServer(http.Dir(".")))
 
 	//template处理
-	http.HandleFunc("/user/login.shtml", func(w http.ResponseWriter, r *http.Request) {
-		//解析
-		tpl, err := template.ParseFiles("view/user/login.html")
-		if nil != err {
-			log.Fatal(err)
-		}
-
-		tpl.ExecuteTemplate(w, "/user/login.shtml", nil)
-	})
+	RegisterView()
 
 	//搭建web服务器
 	http.ListenAndServe(":8989", nil)
+}
+
+func RegisterView() {
+	tpl, err := template.ParseGlob("view/**/*")
+	if nil != err {
+		log.Fatal(err)
+	}
+	for _, v := range tpl.Templates() {
+		tplname := v.Name()
+		http.HandleFunc(tplname, func(writer http.ResponseWriter, request *http.Request) {
+			tpl.ExecuteTemplate(writer, tplname, nil)
+		})
+	}
 }
 
 func userLogin(writer http.ResponseWriter, request *http.Request) {
