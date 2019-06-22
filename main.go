@@ -1,18 +1,23 @@
 package main
 
 import (
+	"./model"
+	"./service"
 	"encoding/json"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	"html/template"
 	"log"
+	"math/rand"
 	"net/http"
 )
+
+var userService service.UserService
 
 func main() {
 	//绑定请求和处理函数
 	http.HandleFunc("/user/login", userLogin)
+	http.HandleFunc("/user/register", userRegister)
 
 	//提供静态资源文件
 	http.Handle("/asset/", http.FileServer(http.Dir(".")))
@@ -58,6 +63,24 @@ func userLogin(writer http.ResponseWriter, request *http.Request) {
 		Resp(writer, 0, nil, "账号或者密码错误")
 	}
 
+}
+
+//curl http://127.0.0.1:8989/user/register -d "mobile=13828748468&passwd=123123"
+func userRegister(writer http.ResponseWriter, request *http.Request) {
+	//解析参数
+	request.ParseForm()
+	mobile := request.PostForm.Get("mobile")
+	plainpwd := request.PostForm.Get("passwd")
+	nickname := fmt.Sprintf("user%06d", rand.Int31())
+	avatar := ""
+	sex := model.SEX_UNKNOW
+
+	user, err := userService.Register(mobile, plainpwd, nickname, avatar, sex)
+	if err != nil {
+		Resp(writer, -1, nil, err.Error())
+	} else {
+		Resp(writer, 0, user, "")
+	}
 }
 
 type H struct {
