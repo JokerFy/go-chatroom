@@ -15,21 +15,13 @@ func UserLogin(writer http.ResponseWriter, request *http.Request) {
 	mobile := request.PostForm.Get("mobile")
 	passwd := request.PostForm.Get("passwd")
 
-	loginok := false
-	if mobile == "18600000000" && passwd == "123456" {
-		loginok = true
-	}
-
 	//curl http://127.0.0.1:8989/user/login -X POST -d "mobile=18600000000&passwd=12345"
-	if loginok {
-		data := make(map[string]interface{})
-		data["id"] = 1
-		data["token"] = "success"
-		util.RespOk(writer, data, "登录成功")
+	user, err := userService.Login(mobile, passwd)
+	if err != nil {
+		util.RespFail(writer, err.Error())
 	} else {
-		util.RespFail(writer, "账号或者密码错误")
+		util.RespOk(writer, user, "")
 	}
-
 }
 
 //curl http://127.0.0.1:8989/user/register -d "mobile=13828748468&passwd=123123"
