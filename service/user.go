@@ -76,3 +76,13 @@ func (s *UserService) Login(
 	DbEngin.ID(tmp.Id).Cols("token").Update(&tmp)
 	return tmp, nil
 }
+
+//查找某个用户
+func (s *UserService) Find(
+	userId int64) (user model.User) {
+
+	//首先通过手机号查询用户
+	tmp := model.User{}
+	DbEngin.ID(userId).Get(&tmp)
+	return tmp
+}

@@ -22,6 +22,8 @@ func init() {
 	DbEngin.ShowSQL(true)
 	DbEngin.SetMaxOpenConns(2)
 	//自动创建User表结构
-	DbEngin.Sync2(new(model.User))
+	DbEngin.Sync2(new(model.User),
+		new(model.Contact),
+		new(model.Community))
 	fmt.Println("init data base ok")
 }
