@@ -19,9 +19,11 @@ func main() {
 	http.HandleFunc("/contact/loadcommunity", ctrl.LoadCommunity)
 	http.HandleFunc("/contact/loadfriend", ctrl.LoadFriend)
 	http.HandleFunc("/contact/joincommunity", ctrl.JoinCommunity)
+	http.HandleFunc("/attach/upload", ctrl.UploadLocal)
 	http.HandleFunc("/chat", ctrl.Chat)
 	//提供静态资源文件
 	http.Handle("/asset/", http.FileServer(http.Dir(".")))
+	http.Handle("/mnt/", http.FileServer(http.Dir(".")))
 
 	//template处理
 	RegisterView()

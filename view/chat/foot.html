@@ -3,7 +3,7 @@
 
         function upload(dom){
             uploadfile("attach/upload",dom,function(res){
-                if(res.code==200){
+                if(res.code==0){
                     app.sendpicmsg(res.data)
                 }
 
@@ -216,7 +216,8 @@
 
                         }
                         data.ismine = userId()==msg.userid;
-                        console.log(data.ismine,userId(),msg.userid)
+                        console.log(data.ismine,userId(),msg.userid);
+                        console.log(666666666666666);
                         data.user = user;
                         data.msg = msg;
                         this.msglist = this.msglist.concat(data)
@@ -245,7 +246,7 @@
                         var msg =this.createmsgcontext();
                         msg.media=4;
                         msg.url=picurl;
-                        this.showmsg(userInfo(),msg)
+                        this.showmsg(userInfo(),msg);
                         this.webSocket.send(JSON.stringify(msg))
                     },
                     sendaudiomsg:function(url,num){
